@@ -1,0 +1,13 @@
+Django==1.11.3
+django-cors-headers==2.1.0
+djangorestframework==3.6.3
+gunicorn==19.7.1
+numpy==1.13.1
+opencv-python==3.3.0.9
+psycopg2==2.7.1
+python-dateutil==2.6.1
+pytz==2017.3
+selenium==3.7.0
+six==1.11.0
+whitenoise==3.3.0
+xvfbwrapper==0.2.9

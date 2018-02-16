@@ -1,0 +1,2 @@
+-- Intro
+Django Skeleton

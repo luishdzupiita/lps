@@ -1,0 +1,23 @@
+<form id="form">
+  <div><input type="text" id="username" name="username" placeholder="Username" autofocus /></div>
+  <div><input type="text" name="password" placeholder="Password" /></div>
+  <div><input type="submit" value="Submit" /></div>
+</form>
+
+<script>
+$('#form').submit(function(e) {
+  e.preventDefault();
+  $.ajax({
+    url: '/api/app/user_mgmt/add_user',
+    type: 'POST',
+    data: $('#form').serialize(),
+    success: function(data) {
+      // toastr.success('Success: ' + JSON.stringify(data), null, {timeOut: 1000});
+      window.location.reload();
+    },
+    error: function(xhr) {
+      toastr.error('Error: ' + xhr.status, null, {timeOut: 1000});
+    },
+  });
+});
+</script>

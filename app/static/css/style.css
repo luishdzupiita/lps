@@ -1,0 +1,90 @@
+html,
+body {
+    min-height: 100%;
+	font-family: sans-serif;
+}
+body{
+	background: #cfcfcf; /* For browsers that do not support gradients */
+	background: -webkit-linear-gradient(#cfcfcf, white); /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#cfcfcf, white); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#cfcfcf, white); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#cfcfcf, white); /* Standard syntax */
+}
+.btn-g {
+    position: relative;
+    width: 150px;
+    height: 40px;
+    display: block;
+    margin: 10px auto;
+    padding: 0;
+    font-size: 12px;
+    overflow: hidden;
+    border-width: 0;
+    outline: none;
+    border-radius: 2px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+    background-color: #449d44;
+    color: #ecf0f1;
+    transition: background-color .3s;
+}
+.btn-g:active:before {
+  width: 120%;
+  padding-top: 120%;
+
+  transition: width .2s ease-out, padding-top .2s ease-out;
+}
+.btn-g:hover, .btn:focus {
+  background-color: #2781ad;
+}
+.btn-g span {
+  display: block;
+  padding: 12px 24px;
+}
+
+.btn-g:before {
+  content: "";
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  display: block;
+  width: 0;
+  padding-top: 0;
+
+  border-radius: 100%;
+
+  background-color: rgba(236, 240, 241, .3);
+
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+.in {
+      width: 20%;
+    background: #fff;
+    font: sans-serif;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0 , .1);
+    border: 1px solid rgba(0, 0, 0 , .1);
+    outline: 0;
+    padding: 10px 10px;
+    display:inline-block;
+    margin-left:40%;
+    margin-bottom:25px;
+    margin-top:2px;
+}
+
+#results {
+    margin-left:25%;
+    margin-top:40px;
+}
+
+#time2 {
+    display:block;
+    visibility:hidden;
+    font-size: 20px;
+    text-align: center;
+    margin-top: 50px;
+}

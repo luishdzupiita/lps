@@ -1,0 +1,174 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<!--[if lte IE 6]><html class="preIE7 preIE8 preIE9"><![endif]-->
+<!--[if IE 7]><html class="preIE8 preIE9"><![endif]-->
+<!--[if IE 8]><html class="preIE9"><![endif]-->
+<!--[if gte IE 9]><!--><html><!--<![endif]-->
+<head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Liveperson Stressor</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+
+</head>
+ <body>
+        <span id="time2"></span>
+        <input id="endpoint" class="in" type="text" placeholder="URL (default is chat-container)"></input>
+        <input id="basename" class="in" type="text" placeholder="User base name"></input>
+     <input id="numcon" class="in" type="text" placeholder="Number of connections"></input>
+ </br>
+ <button id="stress" class="btn-g">Liveperson</button>
+ <button id="stress2" class="btn-g">Conversation</button>
+ <div id="results"></div>
+
+    <script
+  	src="https://code.jquery.com/jquery-2.2.4.min.js"
+  	integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  	crossorigin="anonymous"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{% static 'js/app.js' %}"></script>
+    <script>
+        (function($) {
+            // Attach event listeners
+            $('#stress').click(function(){
+                window.count_down()
+                $.ajax({
+	              method: "POST",
+	              url: "/lps/",
+	              data: { 'instruction': 'init', 'instances':parseInt($('#numcon').val()), 'base_name':String($('#basename').val()), 'endpoint':String($('#endpoint').val())},
+                  error: function (request, status, error) {
+                        console.log(request.responseText);
+                        console.log(status);
+                        console.log(error)  },
+	                })
+              .done(function( msg ) {
+                console.log(msg)
+                $('#time2').css('visibility','hidden');
+                $('#results').text('Results available in console..')
+              });
+            });
+
+            $('#stress2').click(function(){
+                window.count_down()
+                $.ajax({
+	              method: "POST",
+	              url: "/cs/",
+	              data: { 'instruction': 'init', 'instances':parseInt($('#numcon').val()), 'base_name':String($('#basename').val()), 'endpoint':String($('#endpoint').val())},
+                  error: function (request, status, error) {
+                        console.log(request.responseText);
+                        console.log(status);
+                        console.log(error)  },
+	                })
+              .done(function( msg ) {
+                console.log(msg)
+                $('#time2').css('visibility','hidden');
+                $('#results').text('Results available in console..')
+              });
+            });
+
+            // Ajust some aspects of the DOM to fit different sizes {Dyanamic/Computed CSS}
+            function readjust() {
+            var currentWidth = $(window).width();
+            var currentHeight = $(window).height();
+            if (currentWidth <= 767) { // Entering collapsed menu/nav-bar (Bootstrap's extra small size)
+
+            } else {
+
+            }
+            // General changes
+
+
+          } // End of readjust()
+
+          readjust(); // Ajust some aspects of the DOM to fit different sizes
+          $(window).resize(readjust);  // Attaching the window a resized callback
+          function CountDownTimer(duration, granularity) {
+        this.duration = duration;
+        this.granularity = granularity || 1000;
+        this.tickFtns = [];
+        this.running = false;
+        this.stop = false;
+      }
+
+      CountDownTimer.prototype.start = function() {
+        if (this.running) {
+           this.stop = true;
+          return;
+        }
+        this.running = true;
+        var start = Date.now(),
+            that = this,
+            diff, obj;
+
+        (function timer() {
+          diff = that.duration - (((Date.now() - start) / 1000) | 0);
+
+          if (this.stop == true) {
+              diff = 0;
+              that.running = false;
+              this.stop = false;
+              this.tickFtns = [];
+              return;
+          }
+          if (diff > 0) {
+            setTimeout(timer, that.granularity);
+            }   else {
+            diff = 0;
+            that.running = false;
+            }
+
+          obj = CountDownTimer.parse(diff);
+          that.tickFtns.forEach(function(ftn) {
+            ftn.call(this, obj.minutes, obj.seconds);
+          }, that);
+        }());
+      };
+
+      CountDownTimer.prototype.onTick = function(ftn) {
+        if (typeof ftn === 'function') {
+          this.tickFtns.push(ftn);
+        }
+        return this;
+      };
+
+      CountDownTimer.prototype.expired = function() {
+        return !this.running;
+      };
+
+      CountDownTimer.parse = function(seconds) {
+        return {
+          'minutes': (seconds / 60) | 0,
+          'seconds': (seconds % 60) | 0
+        };
+      };
+
+      window.count_down = function () {
+      var  display2 = document.querySelector('#time2');
+      $('#time2').css('visibility','visible');
+      if (typeof window.timer2 !== 'undefined') {
+           window.timer2.stop =  true;
+      } else {
+      window.timer2 = new CountDownTimer(345);
+      window.timer2.onTick(format(display2)).start();
+      }
+
+
+      function format(display) {
+      return function (minutes, seconds) {
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+          display.textContent = minutes + ':' + seconds;
+          };
+          };
+      };
+          // Document ready
+          $( document ).ready(function() {
+
+        })
+
+        })(jQuery);
+    </script>
+	</body>
+</html>

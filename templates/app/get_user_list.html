@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="shortcut icon" href="/static/common/favicon.ico" />
+<link rel="stylesheet" href="/static/common/basic.css" />
+<script src="/static/common/basic.js"></script>
+
+<script src="/static/jquery/jquery.min.js"></script>
+
+<link rel="stylesheet" href="/static/toastr/toastr.min.css" />
+<script src="/static/toastr/toastr.min.js"></script>
+</head>
+
+<body>
+<a href="javascript:;" onclick="new_user();">New User</a>
+<!-- <a href="/api/app/user_mgmt/new_user.html">New User</a> -->
+<div id="newUser"></div>
+<div id="getUser"></div>
+<div id="editUser"></div>
+
+<table width="100%">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Password</th>
+      <th>Created At</th>
+      <th>Updated At</th>
+      <th>Operation</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.password }}</td>
+      <td>{{ user.created_at }}</td>
+      <td>{{ user.updated_at }}</td>
+      <td>
+        <a href="javascript:;" onclick="show_user({{ user.id }});">Show</a>
+        <a href="javascript:;" onclick="edit_user({{ user.id }});">Edit</a>
+        <a href="javascript:;" onclick="delete_user({{ user.id }}, '{{ user.username }}');">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div>
+  <ul>
+    {% if not pg.is_first %}
+    <li><a href="?page={{ pg.first }}"><span>&laquo;</span></a></li>
+    {% else %}
+    <li class="disabled"><a href="javascript:;"><span>&laquo;</span></a></li>
+    {% endif %}
+
+    {% if pg.has_prev %}
+    <li><a href="?page={{ pg.prev }}"><span>&lsaquo;</span></a></li>
+    {% else %}
+    <li class="disabled"><a href="javascript:;"><span>&lsaquo;</span></a></li>
+    {% endif %}
+
+    {% for x in pg.pages %}
+      {% if x != pg.page %}
+    <li><a href="?page={{ x }}">{{ x }}</a></li>
+      {% else %}
+    <li class="active"><a href="javascript:;">{{ x }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if pg.has_next %}
+    <li><a href="?page={{ pg.next }}"><span>&rsaquo;</span></a></li>
+    {% else %}
+    <li class="disabled"><a href="javascript:;"><span>&rsaquo;</span></a></li>
+    {% endif %}
+
+    {% if not pg.is_last %}
+    <li><a href="?page={{ pg.last }}"><span>&raquo;</span></a></li>
+    {% else %}
+    <li class="disabled"><a href="javascript:;"><span>&raquo;</span></a></li>
+    {% endif %}
+  </ul>
+</div>
+
+</body>
+
+<script>
+function new_user() {
+  var url = '/api/app/user_mgmt/new_user.html';
+  $('#newUser').load(url, function(response, status, xhr) {
+    if (xhr.status === 200) {
+      $('#username').focus();
+    } else {
+      toastr.error('Error: ' + xhr.status, null, {timeOut: 1000});
+    }
+  });
+}
+
+function show_user(id) {
+  var url = '/api/app/user_mgmt/get_user.html?id=' + id;
+  $('#getUser').load(url, function(response, status, xhr) {
+    if (xhr.status === 200) {
+    } else {
+      toastr.error('Error: ' + xhr.status, null, {timeOut: 1000});
+    }
+  });
+}
+
+function edit_user(id) {
+  var url = '/api/app/user_mgmt/edit_user.html?id=' + id;
+  $('#editUser').load(url, function(response, status, xhr) {
+    if (xhr.status === 200) {
+      $('#username').select();
+    } else {
+      toastr.error('Error: ' + xhr.status, null, {timeOut: 1000});
+    }
+  });
+}
+
+function delete_user(id, username) {
+  if (confirm('Are you sure you want to delete user ' + username + '?')) {
+    $.ajax({
+      url: '/api/app/user_mgmt/delete_user',
+      type: 'GET',
+      data: {id: id},
+      success: function(data) {
+        // toastr.success('Success: ' + JSON.stringify(data), null, {timeOut: 1000});
+        window.location.reload();
+      },
+      error: function(xhr) {
+        toastr.error('Error: ' + xhr.status, null, {timeOut: 1000});
+      },
+    });
+  } else {
+  }
+}
+</script>
+</html>
